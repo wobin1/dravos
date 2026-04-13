@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  EMPLOYEE
+  ADMIN
+}
+
+model User {
+  id                    String              @id @default(cuid())
+  name                  String?
+  email                 String              @unique
+  password              String
+  role                  Role                @default(EMPLOYEE)
+  monthlySalary         Float               @default(0)
+  dailyVideoTarget      Int                 @default(3)
+  workingDaysPerMonth   Int                 @default(22)
+  youtubeChannelId      String?
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  submissions           VideoSubmission[]
+  dailyPerformance      DailyPerformance[]
+}
+
+model VideoSubmission {
+  id          String   @id @default(cuid())
+  youtubeUrl  String
+  videoId     String   @unique
+  status      String   @default("APPROVED")
+  submittedAt DateTime @default(now())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DailyPerformance {
+  id              String   @id @default(cuid())
+  date            DateTime @default(now())
+  videosRequired  Int
+  videosUploaded  Int      @default(0)
+  amountEarned    Float    @default(0)
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+}
