@@ -1,28 +1,38 @@
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "@/lib/auth";
 
-const protectedRoutes = ["/dashboard", "/admin"];
-const adminOnlyRoutes = ["/admin"];
-
 export async function proxy(request: NextRequest) {
-  const path = request.nextUrl.pathname;
-  const isProtectedRoute = protectedRoutes.some((route) => path.startsWith(route));
-  const isAdminOnlyRoute = adminOnlyRoutes.some((route) => path.startsWith(route));
-
-  if (!isProtectedRoute) {
-    return NextResponse.next();
-  }
-
+  const { pathname } = request.nextUrl;
   const cookie = request.cookies.get("session")?.value;
   const session = cookie ? await decrypt(cookie) : null;
 
-  if (!session) {
+  // 1. Redirect root to dashboard (or login if no session)
+  if (pathname === "/") {
+    if (session) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (isAdminOnlyRoute && session.role !== "ADMIN") {
-    // If trying to access admin route but not an ADMIN, redirect to employee dashboard
-    return NextResponse.redirect(new URL("/dashboard/employee", request.url));
+  // 2. Protect dashboard routes
+  if (pathname.startsWith("/dashboard")) {
+    if (!session) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+
+    // Role-based protection check if needed (e.g. /dashboard/admin)
+    if (pathname.startsWith("/dashboard/admin") && session.role !== "ADMIN") {
+      return NextResponse.redirect(new URL("/dashboard/employee", request.url));
+    }
+
+    return NextResponse.next();
+  }
+
+  // 3. Prevent logged-in users from accessing login page
+  if (pathname === "/login") {
+    if (session) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
   }
 
   return NextResponse.next();
@@ -31,5 +41,5 @@ export async function proxy(request: NextRequest) {
 export default proxy;
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/", "/dashboard/:path*", "/login"],
 };
