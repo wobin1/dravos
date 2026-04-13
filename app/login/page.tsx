@@ -49,7 +49,7 @@ export default function LoginPage() {
             <Youtube size={32} />
           </div>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white font-[var(--font-outfit)]">
-            Epeetec Performance
+            Dravos Performance
           </h1>
           <p className="mt-2 text-slate-600 dark:text-slate-400">
             Login to track your daily earnings
@@ -113,7 +113,7 @@ export default function LoginPage() {
         </div>
 
         <p className="mt-8 text-center text-sm text-slate-500 dark:text-slate-500">
-          Secure, performance-linked payroll management for Epeetec teams.
+          Secure, performance-linked payroll management for Dravos teams.
         </p>
       </div>
     </div>

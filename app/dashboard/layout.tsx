@@ -23,7 +23,7 @@ export default async function DashboardLayout({
         <div className="p-6">
           <Link href="/dashboard" className="flex items-center gap-3 text-indigo-600 dark:text-indigo-400">
             <Youtube size={32} />
-            <span className="text-xl font-bold font-[var(--font-outfit)] tracking-tight">Epeetec</span>
+            <span className="text-xl font-bold font-[var(--font-outfit)] tracking-tight">Dravos</span>
           </Link>
         </div>
 
@@ -74,7 +74,7 @@ export default async function DashboardLayout({
         <header className="md:hidden flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 glass sticky top-0 z-50">
           <Link href="/dashboard" className="flex items-center gap-2 text-indigo-600">
             <Youtube size={28} />
-            <span className="font-bold font-[var(--font-outfit)] text-lg">Epeetec</span>
+            <span className="font-bold font-[var(--font-outfit)] text-lg">Dravos</span>
           </Link>
           <button className="h-10 w-10 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800">
              <UserIcon size={20} />
