@@ -15,6 +15,7 @@ export default function DeleteConfirmationModal({ isOpen, onClose, employee, onS
   const [loading, setLoading] = useState(false);
 
   if (!isOpen || !employee) return null;
+  // this is some comments
 
   const handleDelete = async () => {
     setLoading(true);
