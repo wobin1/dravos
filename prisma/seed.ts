@@ -4,9 +4,13 @@ import pg from "pg";
 import bcrypt from "bcryptjs";
 import "dotenv/config";
 
-// We'll try the direct connection first since we are in a Node environment
-// Prisma 7 should still support this if passed in the constructor
-const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+// Prisma 7 requires a driver adapter for connection when using the generated config system
+const pool = new pg.Pool({ 
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
@@ -51,9 +55,11 @@ async function main() {
 main()
   .then(async () => {
     await prisma.$disconnect();
+    await pool.end();
   })
   .catch(async (e) => {
     console.error("Seeding error:", e);
     await prisma.$disconnect();
+    await pool.end();
     process.exit(1);
   });
