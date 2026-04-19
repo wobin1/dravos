@@ -7,7 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:setup": "node scripts/setup-db.js",
+    "db:setup:seed": "node scripts/setup-db.js --seed",
+    "vercel-build": "prisma generate && next build"
   },
   "prisma": {
     "seed": "node prisma/seed.ts"
